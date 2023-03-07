@@ -1,8 +1,8 @@
-# Demo Guide
+# CSA Guide
 This Cloud Security Architecture uses terraform to setup Certificate Authority Certificate demo in a project and underlying infrastructure using Google Cloud Services like [Certificate Authority Service](https://cloud.google.com/certificate-authority-service) and [Cloud Storage](https://cloud.google.com/storage).
 
 
-## Demo Architecture Diagram
+## CSA Architecture Diagram
 The image below describes the architecture of CSA Certificate Authority Service demo.
 
 ![Architecture Diagram](./cas-arch.png)
@@ -27,8 +27,8 @@ Follow the steps in [this guide](https://cloud.google.com/resource-manager/docs/
 Clone this github repository go to the root of the repository.
 
 ``` 
-git clone https://github.com/mgaur10/csa-certificate-auth-service.git
-cd csa-certificate-auth-service
+git clone https://github.com/googlecloudplatform/csa-certificate-authority-service.git
+cd csa-certificate-authority-service
 ```
 
 ### 3. Deploy the infrastructure using Terraform
