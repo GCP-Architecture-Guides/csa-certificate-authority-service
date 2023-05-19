@@ -77,7 +77,7 @@ When designing PKI with GCP CAS, the following limits should be taken into consi
 git clone https://github.com/GCP-Architecture-Guides/csa-certificate-authority-service.git
 ```
 
-4. Navigate to the certificate-authority-service folder.
+4. Navigate to the csa-certificate-authority-service folder.
 
 ```
 cd csa-certificate-authority-service</th>
@@ -88,7 +88,7 @@ cd csa-certificate-authority-service</th>
 export TF_VAR_demo_project_id=[YOUR_PROJECT_ID]
 ```
 
-6. While in the certificate-authority-service folder, run the commands below in order. 
+6. While in the csa-certificate-authority-service folder, run the commands below in order. 
 
 ```
 terraform init
