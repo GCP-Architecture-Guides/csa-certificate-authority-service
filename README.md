@@ -249,7 +249,7 @@ You can't disable Admin Activity audit logs.
 -  Data Access audit logs  
 Includes "admin read" operations that read metadata or configuration information. Also includes "data read" and "data write" operations that read or write user-provided data.  
 To receive Data Access audit logs, you must [explicitly enable](https://cloud.google.com/logging/docs/audit/configure-data-access#config-console-enable) them.
--  For specific audit logs created by the Certificate Authority Service, please refer to (https://cloud.google.com/certificate-authority-service/docs/audit-logging).
+-  For specific audit logs created by the Certificate Authority Service, [please refer](https://cloud.google.com/certificate-authority-service/docs/audit-logging).
 
 ## Enable audit logging
 
@@ -339,15 +339,15 @@ Use the following instructions to enable recommended alerts.
 
 3. Activate the incident response team
 4. Contain and isolate the impacted CA environment
-    a. To disable a CA from being able to issue certificates, reference (https://cloud.google.com/certificate-authority-service/docs/managing-ca-state#disable)
+    a. To disable a CA from being able to issue certificates, [refer here](https://cloud.google.com/certificate-authority-service/docs/managing-ca-state#disable)
 
 5. Establish a plan to communicate impact and next-step mitigations to impacted stakeholders (internal / external)
 6. Upon completion of an investigation and verified containment, perform the following:
-    a. Revoke and reset credentials for any compromised identities that were mapped to a role that provides elevated permissions for CAs and associated policies / templates.> (https://cloud.google.com/certificate-authority-service/docs/configuring-iam)  
-(https://cloud.google.com/certificate-authority-service/docs/reference/permissions-and-roles)
-    b. Revoke compromised CAs and associated certificates and establish new CAs (https://cloud.google.com/certificate-authority-service/docs/managing-ca-rotation)
+    a. Revoke and reset credentials for any compromised identities that were mapped to a role that provides elevated permissions for CAs and associated policies/templates.[link1](https://cloud.google.com/certificate-authority-service/docs/configuring-iam)  
+[link2](https://cloud.google.com/certificate-authority-service/docs/reference/permissions-and-roles)
+    b. Revoke compromised CAs and associated certificates and establish new CAs [refer here](https://cloud.google.com/certificate-authority-service/docs/managing-ca-rotation)
     c. Add to CRL/update status in OCSP Responder (if not automated) to notify subjects, relying parties, and vendors
-    d. Revoke existing certificates and reissue certificates from new CAs (https://cloud.google.com/certificate-authority-service/docs/revoking-certificates)
+    d. Revoke existing certificates and reissue certificates from new CAs [refer here](https://cloud.google.com/certificate-authority-service/docs/revoking-certificates)
     e. Remove/replace root certificates
     f. Validate that revocation checking is enabled on relying party systems
     g. Validate cert and root replacements
