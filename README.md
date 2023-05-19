@@ -41,7 +41,7 @@ When designing PKI with GCP CAS, the following limits should be taken into consi
   </thead>
   <tbody>
     <tr>
-      <td>Pending CAs1</td>
+      <td>Pending CAs<sup>1</sup></td>
       <td>per Location per Project</td>
       <td>100</td>
     </tr>
