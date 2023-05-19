@@ -21,11 +21,11 @@ We'll also provide details on how to use CSR (Certificate Signing Request) to im
 
 ## Product and services
 
-**[Certificate Authority Service (CAS)**](https://cloud.google.com/certificate-authority-service) - Certificate Authority Service is a highly available, scalable Google Cloud service that enables you to simplify, automate, and customize the deployment, management, and security of private certificate authorities (CA).
+[Certificate Authority Service (CAS)](https://cloud.google.com/certificate-authority-service) - Certificate Authority Service is a highly available, scalable Google Cloud service that enables you to simplify, automate, and customize the deployment, management, and security of private certificate authorities (CA).
 
-**[Key Management Service (KMS)**](https://cloud.google.com/security-key-management) - Cloud Key Management Service allows you to create, import, and manage cryptographic keys and perform cryptographic operations in a single centralized cloud service. You can use these keys and perform these operations by using Cloud KMS directly, by using Cloud HSM or Cloud External Key Manager, or by using Customer-Managed Encryption Keys (CMEK) integrations within other Google Cloud services.
+[Key Management Service (KMS)](https://cloud.google.com/security-key-management) - Cloud Key Management Service allows you to create, import, and manage cryptographic keys and perform cryptographic operations in a single centralized cloud service. You can use these keys and perform these operations by using Cloud KMS directly, by using Cloud HSM or Cloud External Key Manager, or by using Customer-Managed Encryption Keys (CMEK) integrations within other Google Cloud services.
 
-**[Google Cloud Storage (GCS)**](https://cloud.google.com/storage) - Cloud Storage is a managed service for storing unstructured data. Store any amount of data and retrieve it as often as you like.
+[Google Cloud Storage (GCS)](https://cloud.google.com/storage) - Cloud Storage is a managed service for storing unstructured data. Store any amount of data and retrieve it as often as you like.
 
 ## Design considerations
 
@@ -51,113 +51,66 @@ When designing PKI with GCP CAS, the following limits should be taken into consi
       <td>1,000</td>
     </tr>
     <tr>
-      <td>Unexpired revoked certificates2</td>
+      <td>Unexpired revoked certificates<sup>2</sup></td>
       <td>per CA or certificate revocation list (CRL)</td>
       <td>500,000</td>
     </tr>
   </tbody>
 </table>
 
-1A pending certificate authority (CA) is a subordinate CA that has been created but not yet activated, and is thus in the AWAITING_USER_ACTIVATION [state](https://cloud.google.com/certificate-authority-service/docs/reference/rest/v1beta1/projects.locations.certificateAuthorities#State).  
-2A CRL can contain at most 500,000 unexpired revoked certificates. If you attempt to revoke more than this limit, the revocation request fails. If you need to revoke more than 500,000 certificates, we recommend that you wait until the existing revoked certificates have expired or revoke the issuing CA certificate.
+<sup>1</sup> pending certificate authority (CA) is a subordinate CA that has been created but not yet activated, and is thus in the AWAITING_USER_ACTIVATION [state](https://cloud.google.com/certificate-authority-service/docs/reference/rest/v1beta1/projects.locations.certificateAuthorities#State).  
+<sup>2</sup> CRL can contain at most 500,000 unexpired revoked certificates. If you attempt to revoke more than this limit, the revocation request fails. If you need to revoke more than 500,000 certificates, we recommend that you wait until the existing revoked certificates have expired or revoke the issuing CA certificate.
 
 
 
 # Deployment
 
-**Terraform Instructions:**
+##Terraform Instructions:
 
 1. Sign in to your organization and assign yourself a **CA Service Admin **and** Cloud KMS Admin** role on the project to be used for the deployment.
 
-1. If a new project needs to be created and enable billing. Follow the steps in [this guide](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
+2. If a new project needs to be created and enable billing. Follow the steps in [this guide](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
 
-1. Open up Cloud shell and clone the following [git repository](https://github.com/GoogleCloudPlatform/csa-certificate-authority-service) using the command below:
+3. Open up Cloud shell and clone the following [git repository](https://github.com/GoogleCloudPlatform/csa-certificate-authority-service) using the command below:
 
-<table>
-  <thead>
-    <tr>
-      <th>git clone https://github.com/GCP-Architecture-Guides/csa-certificate-authority-service.git</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
+```
+git clone https://github.com/GCP-Architecture-Guides/csa-certificate-authority-service.git
+```
 
-1. Navigate to the certificate-authority-service folder.
+4. Navigate to the certificate-authority-service folder.
 
-<table>
-  <thead>
-    <tr>
-      <th>cd csa-certificate-authority-service</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
+```
+cd csa-certificate-authority-service</th>
+```
+5. Export the project id in the Terraform variable
 
-1. Export the project id in the Terraform variable
+```
+export TF_VAR_demo_project_id=[YOUR_PROJECT_ID]
+```
 
-<table>
-  <thead>
-    <tr>
-      <th>export TF_VAR_demo_project_id=[YOUR_PROJECT_ID]</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
+6. While in the certificate-authority-service folder, run the commands below in order. 
 
-1. While in the certificate-authority-service folder, run the commands below in order. 
+```
+terraform init
 
-<table>
-  <thead>
-    <tr>
-      <th>terraform init</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
+terraform plan
 
-<table>
-  <thead>
-    <tr>
-      <th>terraform plan</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
-
-<table>
-  <thead>
-    <tr>
-      <th>terraform apply</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
+terraform apply
+```
 
 > if prompted, authorize the API call.
 
-1. Once deployment is finished it will publish the output summary of assets orchestrated. It deploys the resources within five minutes.
+7. Once deployment is finished it will publish the output summary of assets orchestrated. It deploys the resources within five minutes.
 
 ![image](./images/csa-certificat--1234.png)
 
-1. After completing the demo, navigate to the certificate-authority-service folder and run the command below to destroy all demo resources.
+8. After completing the demo, navigate to the certificate-authority-service folder and run the command below to destroy all demo resources.
 
-<table>
-  <thead>
-    <tr>
-      <th>terraform destroy</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
+```
+terraform destroy
+```
 
-**Terraform Summary:**
+##Terraform Summary:
 
 <table>
   <thead>
@@ -308,9 +261,9 @@ For information about enabling some or all of your Data Access audit logs, see [
 
 In the Google Cloud console, you can use the Logs Explorer to retrieve your audit log entries for your Cloud project, folder, or organization:
 
-1. In the Google Cloud console, go to the **Logging> Logs Explorer** page.
+1. In the Google Cloud console, go to the Logging> Logs Explorer page.
 1. Select an existing Cloud project, folder, or organization.
-1. In the **Query builder** pane, do the following:
+1. In the Query builder pane, do the following:
 
 ```
 protoPayload.serviceName="privateca.googleapis.com"
@@ -338,75 +291,68 @@ Use the following instructions to enable recommended alerts.
 
 ## Digital Forensic and Incident Response
 
-_     This section was reviewed by Mandiant's Incident Remediation team._
 
-**Preparation for CA Compromise:**
+### Preparation for CA Compromise:
 
 1. Document certificate policies and templates
-    1. To mitigate risk of abuse, certificate policies should be reviewed to ensure that templates have approved and defined functionality
-        1. Identity constraints
-        1. Extension constraints
-        1. Key usage conditions
-        1. Policy identifiers
-        1. Extensions
+    a. To mitigate risk of abuse, certificate policies should be reviewed to ensure that templates have approved and defined functionality
+        i. Identity constraints
+        ii. Extension constraints
+        iii. Key usage conditions
+        iv. Policy identifiers
+        v. Extensions
 
-1. Create CA compromise response plan
-1. Educate all stakeholders
-1. Review CA security and communication policies at least annually
-1. Establish backup CA plans
-1. Inventory CAs
-1. Verify that only approved CAs are used
-1. Ensure only approved roots are trusted
-1. Inventory Root CAs that are trusted on relying party systems
-1. Review and verify permissions for existing certificate templates
-1. Enforce revocation checking on relying party systems
-1. Enable audit logs and alerts
+2. Create CA compromise response plan
+3. Educate all stakeholders
+4. Review CA security and communication policies at least annually
+5. Establish backup CA plans
+6. Inventory CAs
+7. Verify that only approved CAs are used
+8. Ensure only approved roots are trusted
+9. Inventory Root CAs that are trusted on relying party systems
+10. Review and verify permissions for existing certificate templates
+11. Enforce revocation checking on relying party systems
+12. Enable audit logs and alerts
 
-**Responding to a CA Compromise:**
+### Responding to a CA Compromise:
 
 1. Identify the compromise based on alerting & reporting design
-1. Establish clear understanding of what occurred
-    1. Who detected the incident.
-    1. If available, who perpetrated the incident.
-    1. When the CA was compromised.
-    1. Where the incident occurred.
-    1. Which Roots, sub-CAs and the number of end-user certificates affected by the incident.
-    1. The believed underlying cause of the incident.
-    1. What remedial measures were taken or will be taken to address the underlying cause of the incident.
-    1. A list of certificates and domains involved in the breach.
-    1. How was the incident detected?
-    1. Detailed description of the exploit.
-    1. Details about what infrastructure was compromised.
-    1. Details about how the infrastructure was compromised.
-    1. A detailed timeline of events.
-    1. Was the vulnerability detected by normal operations? If it was not, why?
-    1. Was the vulnerability discovered in the most-recent audit? If yes, was the vulnerability remediated? If the vulnerability was not remediated, why not?
-    1. Was this vulnerability detected by the most-recent audit? If not, please explain why.
-    1. What policy changes need to be made?
-    1. Any other information appropriate.
+2. Establish clear understanding of what occurred
+    a. Who detected the incident.
+    b. If available, who perpetrated the incident.
+    c. When the CA was compromised.
+    d. Where the incident occurred.
+    e. Which Roots, sub-CAs and the number of end-user certificates affected by the incident.
+    f. The believed underlying cause of the incident.
+    g. What remedial measures were taken or will be taken to address the underlying cause of the incident.
+    h. A list of certificates and domains involved in the breach.
+    i. How was the incident detected?
+    j. Detailed description of the exploit.
+    k. Details about what infrastructure was compromised.
+    l. Details about how the infrastructure was compromised.
+    m. A detailed timeline of events.
+    n. Was the vulnerability detected by normal operations? If it was not, why?
+    o. Was the vulnerability discovered in the most-recent audit? If yes, was the vulnerability remediated? If the vulnerability was not remediated, why not?
+    p. Was this vulnerability detected by the most-recent audit? If not, please explain why.
+    q. What policy changes need to be made?
+    r. Any other information appropriate.
 
-1. Activate the incident response team
-1. Contain and isolate the impacted CA environment
-    1. To disable a CA from being able to issue certificates, reference (https://cloud.google.com/certificate-authority-service/docs/managing-ca-state#disable)
+3. Activate the incident response team
+4. Contain and isolate the impacted CA environment
+    a. To disable a CA from being able to issue certificates, reference (https://cloud.google.com/certificate-authority-service/docs/managing-ca-state#disable)
 
-1. Establish a plan to communicate impact and next-step mitigations to impacted stakeholders (internal / external)
-1. Upon completion of an investigation and verified containment, perform the following:
-    1. Revoke and reset credentials for any compromised identities that were mapped to a role that provides elevated permissions for CAs and associated policies / templates.
-
-> (https://cloud.google.com/certificate-authority-service/docs/configuring-iam)  
+5. Establish a plan to communicate impact and next-step mitigations to impacted stakeholders (internal / external)
+6. Upon completion of an investigation and verified containment, perform the following:
+    a. Revoke and reset credentials for any compromised identities that were mapped to a role that provides elevated permissions for CAs and associated policies / templates.> (https://cloud.google.com/certificate-authority-service/docs/configuring-iam)  
 (https://cloud.google.com/certificate-authority-service/docs/reference/permissions-and-roles)
+    b. Revoke compromised CAs and associated certificates and establish new CAs (https://cloud.google.com/certificate-authority-service/docs/managing-ca-rotation)
+    c. Add to CRL/update status in OCSP Responder (if not automated) to notify subjects, relying parties, and vendors
+    d. Revoke existing certificates and reissue certificates from new CAs (https://cloud.google.com/certificate-authority-service/docs/revoking-certificates)
+    e. Remove/replace root certificates
+    f. Validate that revocation checking is enabled on relying party systems
+    g. Validate cert and root replacements
 
-    1. Revoke compromised CAs and associated certificates and establish new CAs (https://cloud.google.com/certificate-authority-service/docs/managing-ca-rotation)
-    1. Add to CRL/update status in OCSP Responder (if not automated) to notify subjects, relying parties, and vendors
-    1. Revoke existing certificates and reissue certificates from new CAs
-
-> (https://cloud.google.com/certificate-authority-service/docs/revoking-certificates)
-
-    1. Remove/replace root certificates
-    1. Validate that revocation checking is enabled on relying party systems
-    1. Validate cert and root replacements
-
-1. Track and report on progress
+7. Track and report on progress
 
 # Governance, Risk Management, and Compliance
 
