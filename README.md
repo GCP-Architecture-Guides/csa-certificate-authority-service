@@ -343,8 +343,8 @@ Use the following instructions to enable recommended alerts.
 
 5. Establish a plan to communicate impact and next-step mitigations to impacted stakeholders (internal / external)
 6. Upon completion of an investigation and verified containment, perform the following:
-    - Revoke and reset credentials for any compromised identities that were mapped to a role that provides elevated permissions for CAs and associated policies/templates.[reference](https://cloud.google.com/certificate-authority-service/docs/configuring-iam)  
-[reference2](https://cloud.google.com/certificate-authority-service/docs/reference/permissions-and-roles)
+    - Revoke and reset credentials for any compromised identities that were mapped to a role that provides elevated permissions for CAs and associated policies/templates.[reference-1](https://cloud.google.com/certificate-authority-service/docs/configuring-iam)  
+[reference-2](https://cloud.google.com/certificate-authority-service/docs/reference/permissions-and-roles)
     - Revoke compromised CAs and associated certificates and establish new CAs [reference](https://cloud.google.com/certificate-authority-service/docs/managing-ca-rotation)
     - Add to CRL/update status in OCSP Responder (if not automated) to notify subjects, relying parties, and vendors
     - Revoke existing certificates and reissue certificates from new CAs [reference](https://cloud.google.com/certificate-authority-service/docs/revoking-certificates)
