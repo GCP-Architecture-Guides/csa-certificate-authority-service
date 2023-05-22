@@ -295,12 +295,12 @@ Use the following instructions to enable recommended alerts.
 ### Preparation for CA Compromise:
 
 1. Document certificate policies and templates
-  - To mitigate risk of abuse, certificate policies should be reviewed to ensure that templates have approved and defined functionality
-    -  Identity constraints
-    -  Extension constraints
-    -  Key usage conditions
-    -  Policy identifiers
-    -  Extensions
+    - To mitigate risk of abuse, certificate policies should be reviewed to ensure that templates have approved and defined functionality
+      -  Identity constraints
+      -  Extension constraints
+      -  Key usage conditions
+      -  Policy identifiers
+      -  Extensions
 
 2. Create CA compromise response plan
 3. Educate all stakeholders
