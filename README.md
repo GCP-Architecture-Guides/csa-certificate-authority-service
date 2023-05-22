@@ -318,24 +318,24 @@ Use the following instructions to enable recommended alerts.
 
 1. Identify the compromise based on alerting & reporting design
 2. Establish clear understanding of what occurred
-    a. Who detected the incident.
-    b. If available, who perpetrated the incident.
-    c. When the CA was compromised.
-    d. Where the incident occurred.
-    e. Which Roots, sub-CAs and the number of end-user certificates affected by the incident.
-    f. The believed underlying cause of the incident.
-    g. What remedial measures were taken or will be taken to address the underlying cause of the incident.
-    h. A list of certificates and domains involved in the breach.
-    i. How was the incident detected?
-    j. Detailed description of the exploit.
-    k. Details about what infrastructure was compromised.
-    l. Details about how the infrastructure was compromised.
-    m. A detailed timeline of events.
-    n. Was the vulnerability detected by normal operations? If it was not, why?
-    o. Was the vulnerability discovered in the most-recent audit? If yes, was the vulnerability remediated? If the vulnerability was not remediated, why not?
-    p. Was this vulnerability detected by the most-recent audit? If not, please explain why.
-    q. What policy changes need to be made?
-    r. Any other information appropriate.
+    - Who detected the incident.
+    - If available, who perpetrated the incident.
+    - When the CA was compromised.
+    - Where the incident occurred.
+    - Which Roots, sub-CAs and the number of end-user certificates affected by the incident.
+    - The believed underlying cause of the incident.
+    - What remedial measures were taken or will be taken to address the underlying cause of the incident.
+    - A list of certificates and domains involved in the breach.
+    - How was the incident detected?
+    - Detailed description of the exploit.
+    - Details about what infrastructure was compromised.
+    - Details about how the infrastructure was compromised.
+    - A detailed timeline of events.
+    - Was the vulnerability detected by normal operations? If it was not, why?
+    - Was the vulnerability discovered in the most-recent audit? If yes, was the vulnerability remediated? If the vulnerability was not remediated, why not?
+    - Was this vulnerability detected by the most-recent audit? If not, please explain why.
+    - What policy changes need to be made?
+    - Any other information appropriate.
 
 3. Activate the incident response team
 4. Contain and isolate the impacted CA environment
@@ -343,14 +343,14 @@ Use the following instructions to enable recommended alerts.
 
 5. Establish a plan to communicate impact and next-step mitigations to impacted stakeholders (internal / external)
 6. Upon completion of an investigation and verified containment, perform the following:
-    a. Revoke and reset credentials for any compromised identities that were mapped to a role that provides elevated permissions for CAs and associated policies/templates.[link1](https://cloud.google.com/certificate-authority-service/docs/configuring-iam)  
+    - Revoke and reset credentials for any compromised identities that were mapped to a role that provides elevated permissions for CAs and associated policies/templates.[link1](https://cloud.google.com/certificate-authority-service/docs/configuring-iam)  
 [link2](https://cloud.google.com/certificate-authority-service/docs/reference/permissions-and-roles)
-    b. Revoke compromised CAs and associated certificates and establish new CAs [refer here](https://cloud.google.com/certificate-authority-service/docs/managing-ca-rotation)
-    c. Add to CRL/update status in OCSP Responder (if not automated) to notify subjects, relying parties, and vendors
-    d. Revoke existing certificates and reissue certificates from new CAs [refer here](https://cloud.google.com/certificate-authority-service/docs/revoking-certificates)
-    e. Remove/replace root certificates
-    f. Validate that revocation checking is enabled on relying party systems
-    g. Validate cert and root replacements
+    - Revoke compromised CAs and associated certificates and establish new CAs [refer here](https://cloud.google.com/certificate-authority-service/docs/managing-ca-rotation)
+    - Add to CRL/update status in OCSP Responder (if not automated) to notify subjects, relying parties, and vendors
+    - Revoke existing certificates and reissue certificates from new CAs [refer here](https://cloud.google.com/certificate-authority-service/docs/revoking-certificates)
+    - Remove/replace root certificates
+    - Validate that revocation checking is enabled on relying party systems
+    - Validate cert and root replacements
 
 7. Track and report on progress
 
