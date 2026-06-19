@@ -146,4 +146,3 @@ variable "cert_name" {
 
 
 }
-

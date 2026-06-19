@@ -16,6 +16,9 @@
 ##  This code creates demo environment for CSA Certificate Authority Service 
 ##  This demo code is not built for production workload ##
 
+
+
+
 # Enable the necessary API services
 resource "google_project_service" "api_service" {
   for_each = toset([
@@ -28,6 +31,7 @@ resource "google_project_service" "api_service" {
   project                    = var.demo_project_id
   disable_on_destroy         = true
   disable_dependent_services = true
+  # depends_on = [google_project.demo_project]
 }
 
 resource "time_sleep" "wait_enable_service" {
@@ -35,6 +39,7 @@ resource "time_sleep" "wait_enable_service" {
   create_duration  = "45s"
   destroy_duration = "45s"
 }
+
 
 ## Root CA pool
 resource "google_privateca_ca_pool" "ca_pool" {
@@ -48,6 +53,8 @@ resource "google_privateca_ca_pool" "ca_pool" {
   project    = var.demo_project_id
   depends_on = [time_sleep.wait_enable_service]
 }
+
+
 
 ## rootCA 
 resource "google_privateca_certificate_authority" "root_ca" {
@@ -92,7 +99,11 @@ resource "google_privateca_certificate_authority" "root_ca" {
     algorithm = var.ca_algo
   }
   lifetime = "315360000s"
+  depends_on = [
+    google_privateca_ca_pool.ca_pool,
+  ]
 }
+
 
 ## Sub CA pool Region1
 resource "google_privateca_ca_pool" "sub_ca_pool_reg1" {
@@ -107,8 +118,9 @@ resource "google_privateca_ca_pool" "sub_ca_pool_reg1" {
   depends_on = [time_sleep.wait_enable_service]
 }
 
+
 resource "google_privateca_certificate_authority" "sub_ca_reg1" {
-  pool                                   = google_privateca_ca_pool.sub_ca_pool_reg1.name
+  pool                                   = var.subcaPoolName
   project                                = var.demo_project_id
   certificate_authority_id               = var.subCaId
   location                               = var.network_region
@@ -163,10 +175,16 @@ resource "google_privateca_certificate_authority" "sub_ca_reg1" {
     algorithm = var.ca_algo
   }
   type = "SUBORDINATE"
+  depends_on = [
+    google_privateca_certificate_authority.root_ca,
+    google_privateca_ca_pool.sub_ca_pool_reg1,
+  ]
 }
 
+
+
 resource "google_privateca_certificate" "cert_request" {
-  pool                  = google_privateca_ca_pool.sub_ca_pool_reg1.name
+  pool                  = var.subcaPoolName
   project               = var.demo_project_id
   location              = var.network_region
   certificate_authority = google_privateca_certificate_authority.sub_ca_reg1.certificate_authority_id
@@ -189,6 +207,29 @@ resource "tls_cert_request" "demo_leaf_cert" {
   }
 }
 
+
+resource "null_resource" "certificate_push_gcs" {
+
+  triggers = {
+    data_set = "${google_privateca_certificate.cert_request.pem_csr}"
+  }
+
+  provisioner "local-exec" {
+    command     = <<EOT
+      gcloud privateca certificates export ${google_privateca_certificate.cert_request.name} --project ${var.demo_project_id} --issuer-pool ${var.subcaPoolName} --issuer-location ${var.network_region} --include-chain --output-file ${var.demo_project_id}-${google_privateca_certificate.cert_request.name}-chain.crt
+      gcloud privateca certificates export ${google_privateca_certificate.cert_request.name} --project ${var.demo_project_id} --issuer-pool ${var.subcaPoolName} --issuer-location ${var.network_region} --output-file ${var.demo_project_id}-${google_privateca_certificate.cert_request.name}.crt
+  
+  EOT
+    working_dir = path.module
+  }
+  depends_on = [
+    google_privateca_certificate_authority.sub_ca_reg1,
+    google_privateca_certificate.cert_request,
+  ]
+}
+
+
+
 resource "google_storage_bucket" "certificate_bucket" {
   name                        = "certificate-${var.demo_project_id}"
   location                    = var.network_region
@@ -198,19 +239,51 @@ resource "google_storage_bucket" "certificate_bucket" {
   depends_on                  = [time_sleep.wait_enable_service]
 }
 
+
+
 # Add certificate file with chain to bucket
 resource "google_storage_bucket_object" "certificate_chain_push_gcs" {
-  name    = "${var.demo_project_id}-${var.cert_name}-chain.crt"
-  bucket  = google_storage_bucket.certificate_bucket.name
-  content = join("\n", google_privateca_certificate.cert_request.pem_certificate_chain)
+  name       = "${var.demo_project_id}-${google_privateca_certificate.cert_request.name}-chain.crt"
+  bucket     = google_storage_bucket.certificate_bucket.name
+  source     = "${path.module}/${var.demo_project_id}-${google_privateca_certificate.cert_request.name}-chain.crt"
+  depends_on = [resource.null_resource.certificate_push_gcs]
 }
 
 # Add certificate file without chain to bucket
 resource "google_storage_bucket_object" "certificate_push_gcs" {
-  name    = "${var.demo_project_id}-${var.cert_name}.crt"
-  bucket  = google_storage_bucket.certificate_bucket.name
-  content = google_privateca_certificate.cert_request.pem_certificate
+  name       = "${var.demo_project_id}-${google_privateca_certificate.cert_request.name}.crt"
+  bucket     = google_storage_bucket.certificate_bucket.name
+  source     = "${path.module}/${var.demo_project_id}-${google_privateca_certificate.cert_request.name}.crt"
+  depends_on = [resource.null_resource.certificate_push_gcs]
 }
+
+
+
+
+# Deleting the certificate files from local machine
+resource "null_resource" "del_local_cert_files" {
+
+  triggers = {
+    data_set = "${google_storage_bucket_object.certificate_chain_push_gcs.name}"
+  }
+
+  provisioner "local-exec" {
+    command     = <<EOT
+      rm ${var.demo_project_id}-${google_privateca_certificate.cert_request.name}-chain.crt
+      rm ${var.demo_project_id}-${google_privateca_certificate.cert_request.name}.crt
+  
+  EOT
+    working_dir = path.module
+  }
+  depends_on = [
+    google_storage_bucket_object.certificate_chain_push_gcs,
+    google_storage_bucket_object.certificate_push_gcs,
+  ]
+}
+
+
+
+
 
 ## Subordinate CA pool other region
 resource "google_privateca_ca_pool" "subca_pool_reg2" {
@@ -225,14 +298,16 @@ resource "google_privateca_ca_pool" "subca_pool_reg2" {
   depends_on = [time_sleep.wait_enable_service]
 }
 
+
 resource "google_privateca_certificate_authority" "sub_ca_reg2" {
-  pool                                   = google_privateca_ca_pool.subca_pool_reg2.name
+  pool                                   = var.subcaPoolName2
   project                                = var.demo_project_id
   certificate_authority_id               = var.subCaId2
   location                               = var.network_region2
   deletion_protection                    = false # Disable if wish to preserve from being destroyed
   skip_grace_period                      = true
   ignore_active_certificates_on_deletion = true # Disable if wish to save issued certificate when destroyed
+  #  desired_state = "enabled"
   subordinate_config {
     certificate_authority = google_privateca_certificate_authority.root_ca.name
   }
@@ -277,4 +352,11 @@ resource "google_privateca_certificate_authority" "sub_ca_reg2" {
     algorithm = var.ca_algo
   }
   type = "SUBORDINATE"
+
+
+  depends_on = [
+    google_privateca_certificate_authority.root_ca,
+    google_privateca_ca_pool.subca_pool_reg2,
+  ]
+
 }

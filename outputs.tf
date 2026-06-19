@@ -45,4 +45,3 @@ output "_05_issued_certificate_name" {
 output "_06_issued_certificate_storage_bucket_name" {
   value = module.module_cas._06_issued_certificate_storage_bucket_name
 }
-

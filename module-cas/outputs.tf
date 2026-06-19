@@ -46,4 +46,3 @@ output "_05_issued_certificate_name" {
 output "_06_issued_certificate_storage_bucket_name" {
   value = google_storage_bucket.certificate_bucket.name
 }
-

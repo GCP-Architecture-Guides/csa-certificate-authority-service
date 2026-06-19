@@ -16,21 +16,34 @@
 ##  This code creates demo environment for CSA Certificate Authority Service 
 ##  This demo code is not built for production workload ##
 
-terraform {
-  required_version = ">= 1.3.0"
 
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 4.0.0, < 6.0.0"
-    }
-    tls = {
-      source  = "hashicorp/tls"
-      version = ">= 4.0.0"
-    }
-    time = {
-      source  = "hashicorp/time"
-      version = ">= 0.9.0"
-    }
-  }
+
+
+output "_01_cas_project_id" {
+  value = var.demo_project_id
 }
+
+output "_02_root_ca_name_" {
+  value = google_privateca_certificate_authority.root_ca.certificate_authority_id
+}
+
+
+output "_03_sub_ca_name_region1" {
+  value = google_privateca_certificate_authority.sub_ca_reg1.certificate_authority_id
+}
+
+
+output "_04_sub_ca_name_region2" {
+  value = google_privateca_certificate_authority.sub_ca_reg2.certificate_authority_id
+}
+
+
+output "_05_issued_certificate_name" {
+  value = google_privateca_certificate.cert_request.name
+}
+
+
+output "_06_issued_certificate_storage_bucket_name" {
+  value = google_storage_bucket.certificate_bucket.name
+}
+

@@ -16,21 +16,69 @@
 ##  This code creates demo environment for CSA Certificate Authority Service 
 ##  This demo code is not built for production workload ##
 
-terraform {
-  required_version = ">= 1.3.0"
 
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 4.0.0, < 6.0.0"
-    }
-    tls = {
-      source  = "hashicorp/tls"
-      version = ">= 4.0.0"
-    }
-    time = {
-      source  = "hashicorp/time"
-      version = ">= 0.9.0"
-    }
-  }
+
+variable "demo_project_id" {
 }
+
+variable "network_region" {
+}
+
+variable "network_region2" {
+}
+
+variable "ca_algo" {
+}
+
+
+variable "caPoolName" {
+}
+
+variable "caTier" {
+}
+
+variable "caId" {
+}
+
+
+variable "subject_organization" {
+}
+
+variable "subject_common_name" {
+}
+
+variable "subject_country_code" {
+}
+
+variable "subject_organizational_unit" {
+}
+
+variable "subject_province" {
+}
+
+variable "subject_locality" {
+}
+
+variable "subCaId" {
+}
+
+variable "caType" {
+}
+
+variable "subcaPoolName" {
+
+}
+
+variable "subCaId2" {
+
+}
+
+
+variable "subcaPoolName2" {
+
+}
+
+variable "cert_name" {
+
+}
+
